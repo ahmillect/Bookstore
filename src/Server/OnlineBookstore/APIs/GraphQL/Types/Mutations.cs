@@ -1,26 +1,29 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 using OnlineBookstore.Data.DTOs;
 using OnlineBookstore.Data;
 using OnlineBookstore.Models;
+using OnlineBookstore.Services.Auth;
+using HotChocolate.Authorization;
 
 public class Mutations
 {
+    // Book Mutations
+    [Authorize]
     public async Task<Book> AddBook(Book book, [Service] DbContext dbContext)
     {
         await dbContext.Books.InsertOneAsync(book);
         return book;
     }
 
+    [Authorize]
     public async Task<Book> UpdateBook(string id, Book book, [Service] DbContext dbContext)
     {
         await dbContext.Books.ReplaceOneAsync(book => book.Id == id, book);
         return book;
     }
 
+    [Authorize]
     public async Task<Book> DeleteBook(string id, [Service] DbContext dbContext)
     {
         var book = dbContext.Books.Find(book => book.Id == id).FirstOrDefault();
@@ -28,6 +31,7 @@ public class Mutations
         return book;
     }
 
+    // User Mutations
     public async Task<User> RegisterUser(UserInput input, [Service] DbContext dbContext)
     {
         using var hmac = new HMACSHA512();
@@ -44,36 +48,20 @@ public class Mutations
         return user;
     }
 
-    public string Login(UserLoginInput input, [Service] DbContext dbContext, [Service] IConfiguration configuration)
+    public string Login(UserLoginInput input, [Service] IAuthService authService, [Service] DbContext dbContext)
     {
-        var user = dbContext.Users.Find(u => u.Username == input.Username).FirstOrDefault();
+        if (!authService.ValidateUserCredentials(input.Username, input.Password))
+            throw new Exception("Invalid username or password.");
+
+        var user = dbContext.Users.Find(user => user.Username == input.Username).FirstOrDefault();
 
         if (user == null)
-            throw new Exception("Invalid username.");
+            throw new Exception("User not found.");
 
-        using var hmac = new HMACSHA512(user.PasswordSalt);
-
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(input.Password));
-
-        for (int i = 0; i < computedHash.Length; i++)
-        {
-            if (computedHash[i] != user.PasswordHash[i])
-                throw new Exception("Invalid password.");
-        }
-
-        // If we reach here, the user is authenticated. Now, let's generate a JWT.
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(configuration["JwtSettings:Key"]);
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
-            Expires = DateTime.UtcNow.AddDays(7),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-        };
-        var token = tokenHandler.CreateToken(tokenDescriptor);
-        return tokenHandler.WriteToken(token);
+        return authService.GenerateJwt(user);
     }
 
+    [Authorize]
     public async Task<User> UpdateUser(UserUpdateInput input, [Service] DbContext dbContext)
     {
         var filter = Builders<User>.Filter.Eq(u => u.Id, input.Id);
@@ -87,6 +75,7 @@ public class Mutations
         return await dbContext.Users.Find(u => u.Id == input.Id).FirstOrDefaultAsync();
     }
 
+    [Authorize]
     public async Task<User> DeleteUser(string id, [Service] DbContext dbContext)
     {
         var user = dbContext.Users.Find(user => user.Id == id).FirstOrDefault();

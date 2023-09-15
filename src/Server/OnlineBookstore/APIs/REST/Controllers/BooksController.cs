@@ -1,3 +1,4 @@
+using HotChocolate.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Models;
 using OnlineBookstore.Services.Books;
