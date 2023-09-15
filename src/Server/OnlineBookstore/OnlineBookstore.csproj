@@ -1,14 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <!--<Nullable>enable</Nullable>-->
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>f5178c1f-2103-4b9f-bd20-03fb37681f0a</UserSecretsId>
   </PropertyGroup>
+
+    <ItemGroup>
+    <Using Include="System" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="HotChocolate" />
+    <Using Include="HotChocolate.Execution" />
+    <Using Include="HotChocolate.Types" />
+    <Using Include="HotChocolate.Types.Relay" />
+    <Using Include="HotChocolate.Data" />
+    <Using Include="MongoDB.Driver" />
+    <Using Include="OnlineBookstore" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="HotChocolate.AspNetCore" Version="13.5.1" />
     <PackageReference Include="HotChocolate.AspNetCore.Playground" Version="10.5.5" />
+    <PackageReference Include="HotChocolate.Data.MongoDb" Version="13.5.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
     <PackageReference Include="MongoDB.Driver" Version="2.21.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

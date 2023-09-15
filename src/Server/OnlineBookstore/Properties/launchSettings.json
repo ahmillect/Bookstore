@@ -9,24 +9,17 @@
     }
   },
   "profiles": {
-    "http": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5080",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "https://localhost:7106;http://localhost:5080",
+      "applicationUrl": "https://localhost:7000;http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_NAME": "OnlineBookstore",
+        "BOOKS_COLLECTION_NAME": "Books",
+        "USERS_COLLECTION_NAME": "Users"
       }
     },
     "IIS Express": {
@@ -34,7 +27,10 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_NAME": "OnlineBookstore",
+        "BOOKS_COLLECTION_NAME": "Books",
+        "USERS_COLLECTION_NAME": "Users"
       }
     }
   }
