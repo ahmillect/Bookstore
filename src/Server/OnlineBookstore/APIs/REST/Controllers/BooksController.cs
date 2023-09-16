@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Models;
 using OnlineBookstore.Services.Books;
 
-namespace OnlineBookstore.Controllers
+namespace OnlineBookstore.APIs.REST.Controllers
 {
     [ApiController]
     [Route("[controller]")]

@@ -1,9 +1,11 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
+using OnlineBookstore.APIs.GraphQL.Interfaces;
 
 namespace OnlineBookstore.Models
 {
-    public class Author
+    public class Author : ISearchResultType
     {
         public Author()
         {
@@ -14,7 +16,11 @@ namespace OnlineBookstore.Models
             Id = id;
             Name = name;
             Bio = bio;
-            Books = new List<Book>();
+        }
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this);
         }
 
         [BsonId]
@@ -26,8 +32,5 @@ namespace OnlineBookstore.Models
 
         [BsonElement("Bio")]
         public string Bio { get; set; }
-
-        [BsonElement("Books")]
-        public ICollection<Book> Books { get; set; }
     }
 }

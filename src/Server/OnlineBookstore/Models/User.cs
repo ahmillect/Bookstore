@@ -1,5 +1,6 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace OnlineBookstore.Models
 {
@@ -17,6 +18,11 @@ namespace OnlineBookstore.Models
             PasswordHash = passwordHash;
             PasswordSalt = passwordSalt;
             Books = new List<Book>();
+        }
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(this);
         }
 
         [BsonId]

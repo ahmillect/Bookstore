@@ -1,8 +1,13 @@
 using System.Text;
+using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using OnlineBookstore.APIs.GraphQL.DataLoaders;
+using OnlineBookstore.APIs.GraphQL.Types.Mutations;
+using OnlineBookstore.APIs.GraphQL.Types.Queries;
 using OnlineBookstore.Data;
 using OnlineBookstore.GraphQL.Types;
+using OnlineBookstore.Models;
 using OnlineBookstore.Services.Auth;
 using OnlineBookstore.Services.Authors;
 using OnlineBookstore.Services.Books;
@@ -46,19 +51,29 @@ builder.Services.AddEndpointsApiExplorer()
                 .AddSwaggerGen();
 
 builder.Services.AddGraphQLServer()
-                .AddMutationConventions()
                 .AddAuthorization()
-                .AddQueryType<Queries>()
-                .AddMutationType<Mutations>()
+                .AddMutationConventions()
+                .AddQueryType<Query>()
+                .AddMutationType<Mutation>()
+                .AddType<Book>()
+                .AddType<Author>()
+                .AddType<User>()
                 .AddType<BookType>()
                 .AddType<AuthorType>()
                 .AddType<UserType>()
+                .AddTypeExtension<BookQuery>()
+                .AddTypeExtension<AuthorQuery>()
+                .AddTypeExtension<UserQuery>()
+                .AddTypeExtension<BookMutation>()
+                .AddTypeExtension<AuthorMutation>()
+                .AddTypeExtension<UserMutation>()
+                .AddDataLoader<AuthorDataLoader>()
+                .AddDataLoader<BooksDataLoader>()
                 .AddMongoDbPagingProviders()
                 .AddProjections()
                 .AddFiltering()
-                .AddSorting();
-
-builder.Logging.AddConsole();
+                .AddSorting()
+                .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = builder.Environment.IsDevelopment());
 
 var app = builder.Build();
 
@@ -78,6 +93,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGraphQL();
+app.MapGraphQL().WithOptions(new GraphQLServerOptions
+{
+    EnableBatching = true,
+
+});
 
 app.Run();

@@ -1,4 +1,4 @@
-using OnlineBookstore.Data;
+using OnlineBookstore.APIs.GraphQL.DataLoaders;
 using OnlineBookstore.Models;
 
 namespace OnlineBookstore.GraphQL.Types
@@ -21,9 +21,12 @@ namespace OnlineBookstore.GraphQL.Types
                 .Field(a => a.Bio)
                 .Description("The bio of the author.");
 
-            descriptor
-                .Field(a => a.Books)
-                .Description("The books written by the author.");
+            descriptor.Field("books")
+                .Resolve(async context =>
+                    await context.DataLoader<BooksDataLoader>().LoadAsync(context.Parent<Author>().Id, context.RequestAborted))
+                .Type<NonNullType<ListType<BookType>>>()
+                .Description("This is a list of books written by the author.");
+
         }
     }
 }
