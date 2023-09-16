@@ -26,5 +26,8 @@ namespace OnlineBookstore.APIs.GraphQL.Types.Queries
         [UseSorting]
         public async Task<Book> GetBookByTitle(string title, [Service] DbContext dbContext) =>
         await dbContext.Books.Find(book => book.Title == title).FirstOrDefaultAsync();
+
+        public List<AuthorBookCount> GetBookCountsByAuthor([Service] DbContext dbContext) =>
+        dbContext.GetBookCountsByAuthor();
     }
 }
