@@ -11,5 +11,6 @@ namespace OnlineBookstore.Data
         public string Database_Name { get; set; }
         public string Books_Collection_Name { get; set; }
         public string Users_Collection_Name { get; set; }
+        public string Authors_Collection_Name { get; set; }
     }
 }

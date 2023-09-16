@@ -19,6 +19,10 @@ namespace OnlineBookstore.GraphQL.Types
             descriptor
                 .Field(u => u.Email)
                 .Description("The email address of the user.");
+
+            descriptor
+                .Field(u => u.Books)
+                .Description("The books that the user has purchased.");
         }
     }
 }

@@ -1,4 +1,7 @@
+using OnlineBookstore.Data;
 using OnlineBookstore.Models;
+using MongoDB.Driver;
+using OnlineBookstore.Services.Authors;
 
 namespace OnlineBookstore.GraphQL.Types
 {
@@ -17,7 +20,17 @@ namespace OnlineBookstore.GraphQL.Types
                 .Description("The title of the book.");
 
             descriptor
-                .Field(b => b.Author)
+                .Field(b => b.AuthorId)
+                .Name("author")
+                .Resolve(
+                    async ctx =>
+                    {
+                        var authorService = ctx.Service<AuthorService>();
+                        return await authorService.GetAuthorById(ctx.Parent<Book>().AuthorId);
+                    }
+                )
+                .Serial()
+                .Type<AuthorType>()
                 .Description("The author of the book.");
 
             descriptor

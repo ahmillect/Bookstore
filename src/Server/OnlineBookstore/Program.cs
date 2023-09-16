@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using OnlineBookstore.Data;
 using OnlineBookstore.GraphQL.Types;
 using OnlineBookstore.Services.Auth;
+using OnlineBookstore.Services.Authors;
 using OnlineBookstore.Services.Books;
 using OnlineBookstore.Services.Users;
 
@@ -37,6 +38,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddSingleton<DbContext>()
                 .AddSingleton(dbConfig)
                 .AddTransient<IBookService, BookService>()
+                .AddTransient<IAuthorService, AuthorService>()
                 .AddTransient<IUserService, UserService>();
 
 builder.Services.AddControllers();
@@ -44,14 +46,19 @@ builder.Services.AddEndpointsApiExplorer()
                 .AddSwaggerGen();
 
 builder.Services.AddGraphQLServer()
+                .AddMutationConventions()
                 .AddAuthorization()
                 .AddQueryType<Queries>()
                 .AddMutationType<Mutations>()
                 .AddType<BookType>()
+                .AddType<AuthorType>()
                 .AddType<UserType>()
+                .AddMongoDbPagingProviders()
+                .AddProjections()
                 .AddFiltering()
-                .AddSorting()
-                .AddProjections();
+                .AddSorting();
+
+builder.Logging.AddConsole();
 
 var app = builder.Build();
 
@@ -60,6 +67,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler("/error");
 
 app.UseHttpsRedirection();
 

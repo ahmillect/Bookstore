@@ -1,4 +1,3 @@
-using HotChocolate.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineBookstore.Models;
 using OnlineBookstore.Services.Books;
@@ -26,6 +25,17 @@ namespace OnlineBookstore.Controllers
         public async Task<ActionResult<Book>> GetBookById(string id)
         {
             var book = await _bookService.GetBookById(id);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return Ok(book);
+        }
+
+        [HttpGet("title/{title}")]
+        public async Task<ActionResult<Book>> GetBookByTitle(string title)
+        {
+            var book = await _bookService.GetBookByTitle(title);
             if (book == null)
             {
                 return NotFound();

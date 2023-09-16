@@ -19,6 +19,20 @@ namespace OnlineBookstore.Services.Auth
             _dbContext = dbContext;
         }
 
+        public bool ValidateUserCredentials(User user, string password)
+        {
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+
+            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            for (int i = 0; i < computedHash.Length; i++)
+            {
+                if (computedHash[i] != user.PasswordHash[i])
+                    return false;
+            }
+            return true;
+        }
+
         public string GenerateJwt(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -35,23 +49,17 @@ namespace OnlineBookstore.Services.Auth
             return tokenHandler.WriteToken(token);
         }
 
-        public bool ValidateUserCredentials(string username, string password)
+        public Task<string> Login(string username, string password)
         {
             var user = _dbContext.Users.Find(user => user.Username == username).FirstOrDefault();
 
             if (user == null)
                 throw new Exception("Invalid username.");
 
-            using var hmac = new HMACSHA512(user.PasswordSalt);
+            if (!ValidateUserCredentials(user, password))
+                throw new Exception("Invalid password.");
 
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-            for (int i = 0; i < computedHash.Length; i++)
-            {
-                if (computedHash[i] != user.PasswordHash[i])
-                    return false;
-            }
-            return true;
+            return Task.FromResult(GenerateJwt(user));
         }
     }
 }

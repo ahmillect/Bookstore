@@ -5,6 +5,20 @@ namespace OnlineBookstore.Models
 {
     public class User
     {
+        public User()
+        {
+        }
+
+        public User(string id, string username, string email, byte[] passwordHash, byte[] passwordSalt)
+        {
+            Id = id;
+            Username = username;
+            Email = email;
+            PasswordHash = passwordHash;
+            PasswordSalt = passwordSalt;
+            Books = new List<Book>();
+        }
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -20,5 +34,8 @@ namespace OnlineBookstore.Models
 
         [BsonElement("PasswordSalt")]
         public byte[] PasswordSalt { get; set; }
+
+        [BsonElement("Books")]
+        public ICollection<Book> Books { get; set; }
     }
 }

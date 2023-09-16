@@ -19,7 +19,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DATABASE_NAME": "OnlineBookstore",
         "BOOKS_COLLECTION_NAME": "Books",
-        "USERS_COLLECTION_NAME": "Users"
+        "USERS_COLLECTION_NAME": "Users",
+        "AUTHORS_COLLECTION_NAME": "Authors"
       }
     },
     "IIS Express": {
@@ -30,7 +31,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DATABASE_NAME": "OnlineBookstore",
         "BOOKS_COLLECTION_NAME": "Books",
-        "USERS_COLLECTION_NAME": "Users"
+        "USERS_COLLECTION_NAME": "Users",
+        "AUTHORS_COLLECTION_NAME": "Authors"
       }
     }
   }

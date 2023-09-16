@@ -5,6 +5,20 @@ namespace OnlineBookstore.Models
 {
     public class Book
     {
+        public Book()
+        {
+        }
+
+        public Book(string id, string title, string authorID, string description, decimal price, DateTime publishedDate)
+        {
+            Id = id;
+            Title = title;
+            AuthorId = authorID;
+            Description = description;
+            Price = price;
+            PublishedDate = publishedDate;
+        }
+
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
@@ -12,8 +26,8 @@ namespace OnlineBookstore.Models
         [BsonElement("Title")]
         public string Title { get; set; }
 
-        [BsonElement("Author")]
-        public string Author { get; set; }
+        [BsonElement("AuthorId")]
+        public string AuthorId { get; set; }
 
         [BsonElement("Description")]
         public string Description { get; set; }

@@ -6,6 +6,7 @@ namespace OnlineBookstore.Services.Books
     {
         Task<IEnumerable<Book>> GetBooks();
         Task<Book> GetBookById(string id);
+        Task<Book> GetBookByTitle(string title);
         Task<Book> AddBook(Book book);
         Task<Book> UpdateBook(string id, Book book);
         void DeleteBook(string id);

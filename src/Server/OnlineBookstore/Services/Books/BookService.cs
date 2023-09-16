@@ -23,6 +23,12 @@ namespace OnlineBookstore.Services.Books
             return book;
         }
 
+        public async Task<Book> GetBookByTitle(string title)
+        {
+            var book = await _dbContext.Books.Find(book => book.Title == title).FirstOrDefaultAsync();
+            return book;
+        }
+
         public async Task<Book> AddBook(Book book)
         {
             await _dbContext.Books.InsertOneAsync(book);

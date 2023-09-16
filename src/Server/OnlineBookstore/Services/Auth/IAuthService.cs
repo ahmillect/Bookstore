@@ -5,6 +5,7 @@ namespace OnlineBookstore.Services.Auth
     public interface IAuthService
     {
         string GenerateJwt(User user);
-        bool ValidateUserCredentials(string username, string password);
+        Task<string> Login(string username, string password);
+        bool ValidateUserCredentials(User user, string password);
     }
 }
