@@ -1,10 +1,10 @@
 import { useQuery } from "urql";
 
-interface Author {
+type Author = {
   id: string;
   name: string;
   bio: string;
-}
+};
 
 const AUTHORS_QUERY = `
 query {

@@ -1,10 +1,10 @@
 import { useQuery } from "urql";
 
-interface Book {
+type Book = {
   id: string;
   title: string;
   description: string;
-}
+};
 
 const BOOKS_QUERY = `
 query {

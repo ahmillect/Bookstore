@@ -48,11 +48,12 @@ builder.Services.AddSingleton<DbContext>()
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(builder =>
+    options.AddPolicy("MyCorsPolicy", builder =>
     {
         builder.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -94,11 +95,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowSpecificOrigin");
+app.UseCors("MyCorsPolicy");
 
 app.UseExceptionHandler("/error");
 
 app.UseHttpsRedirection();
+
+app.Use((context, next) =>
+{
+    context.Response.Headers.Add("Referrer-Policy", "no-referrer-when-downgrade");
+    return next();
+});
 
 app.UseRouting();
 
