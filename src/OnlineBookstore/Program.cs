@@ -46,6 +46,16 @@ builder.Services.AddSingleton<DbContext>()
                 .AddTransient<IAuthorService, AuthorService>()
                 .AddTransient<IUserService, UserService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer()
                 .AddSwaggerGen();
@@ -83,6 +93,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowSpecificOrigin");
 
 app.UseExceptionHandler("/error");
 
