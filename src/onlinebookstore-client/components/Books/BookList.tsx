@@ -1,3 +1,4 @@
+import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { useQuery } from "urql";
 
 type Book = {
@@ -27,14 +28,22 @@ function BookList() {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div>
+    <Grid container spacing={3}>
       {data.books.map((book: Book) => (
-        <div key={book.id}>
-          <h2>{book.title}</h2>
-          <p>{book.description}</p>
-        </div>
+        <Grid item xs={12} sm={6} md={4} key={book.id}>
+          <Card>
+            <CardContent>
+              <Typography variant="h5" component="div">
+                {book.title}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {book.description}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
       ))}
-    </div>
+    </Grid>
   );
 }
 
